@@ -4,12 +4,34 @@ const Joi = require("joi");
 // Product Schema
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true, minlength: 3 },
-    price: { type: Number, required: true, min: 0 },
-    category: { type: String, required: true, trim: true },
-    stock: { type: Boolean, required: true },
-    description: { type: String, required: true, minlength: 10 },
-    image: { type: String, required: true },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    stock: {
+      type: Number,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      minlength: 5,
+    },
+    image: {
+      type: Buffer,
+    },
   },
   { timestamps: true }
 );
@@ -20,9 +42,9 @@ const validateProduct = (data) => {
     name: Joi.string().min(3).max(100).required(),
     price: Joi.number().min(0).required(),
     category: Joi.string().min(3).max(50).required(),
-    stock: Joi.boolean().required(),
+    stock: Joi.number().integer().min(0).required(),
     description: Joi.string().min(10).required(),
-    image: Joi.string().uri().required(),
+    image: Joi.any().optional(), // Allow file uploads
   });
 
   return schema.validate(data);

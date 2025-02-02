@@ -19,7 +19,7 @@ const createAdmin = async (req, res) => {
     await user.save();
 
     let token = jwt.sign(
-      { email: "admin@blinkit.com" },
+      { email: "admin@blinkit.com", admin: true },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -47,9 +47,13 @@ const loginAdmin = async (req, res) => {
       return res.status(401).send("Invalid credentials");
     }
 
-    let token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    let token = jwt.sign(
+      { email: admin.email, admin: true },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.cookie("token", token, { httpOnly: true, secure: true });
     res.redirect("/admin/dashboard");
